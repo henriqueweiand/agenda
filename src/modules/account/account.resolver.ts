@@ -1,63 +1,72 @@
-import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { UseGuards } from '@nestjs/common';
-
-import { AccountType } from './types/account.type';
-import { GraphQLAuthGuard } from '../auth/jwt.guard';
-import { RolesService } from '../roles/roles.service';
+import {
+    Args,
+    Mutation,
+    Parent,
+    Query,
+    ResolveField,
+    Resolver,
+} from '@nestjs/graphql';
+import { BaseResolver } from '../common/resolver/base.resolver';
+import { Account } from './account.entity';
 import { AccountService } from './account.service';
-
-import { CreateAccountInput } from './inputs/create-account.input';
-import { UpdateAccountInput } from './inputs/update-account.input';
+import { GetAllProductDto } from './dto/getAllAccountDto';
+import { CreateAccountInput } from './inputs/createAccount.input';
+import { AccountType } from './types/account.type';
 
 @Resolver(() => AccountType)
-export class AccountResolver {
-    constructor(
-        private accountService: AccountService,
-        private rolesService: RolesService,
-    ) {}
-
-    @UseGuards(GraphQLAuthGuard)
-    @Query(() => AccountType)
-    account(@Args('id') id: string) {
-        return this.accountService.getAccount(id);
+export class AccountResolver extends BaseResolver {
+    constructor(private accountService: AccountService) {
+        super();
     }
 
-    @UseGuards(GraphQLAuthGuard)
     @Query(() => [AccountType])
-    accounts() {
-        return this.accountService.getAccounts();
+    accounts(@Args() filters: GetAllProductDto) {
+        return this.accountService.getAccounts(filters);
+    }
+
+    @Query(() => AccountType)
+    account(@Args('id') id: string) {
+        return this.accountService.getById(id);
     }
 
     @Mutation(() => AccountType)
     async createAccount(
         @Args('createAccountInput') createAccountInput: CreateAccountInput,
     ) {
-        const { roles, ...accountData } = createAccountInput;
-        const account = await this.accountService.create(accountData);
-
-        if (roles.length) {
-            const assignIn = await this.rolesService.getMany(roles);
-            this.accountService.assign(account, assignIn);
-        }
+        const account = await this.accountService.createAndSave(
+            createAccountInput,
+        );
 
         return account;
     }
 
-    @UseGuards(GraphQLAuthGuard)
+    // @Mutation(() => AccountType)
+    // async updateAccount(
+    //     @Args('id') id: string,
+    //     @Args('updateAccountInput') updateAccountInput: UpdateAccountInput,
+    // ) {
+    //     const { roles, ...accountData } = updateAccountInput;
+    //     const account = await this.accountService.getAccount(id);
+    //     await this.accountService.update(account, accountData);
+
+    //     if (roles.length) {
+    //         const assignIn = await this.rolesService.getMany(roles);
+    //         this.accountService.assign(account, assignIn);
+    //     }
+
+    //     return account;
+    // }
+
     @Mutation(() => AccountType)
-    async updateAccount(
-        @Args('id') id: string,
-        @Args('updateAccountInput') updateAccountInput: UpdateAccountInput,
-    ) {
-        const { roles, ...accountData } = updateAccountInput;
-        const account = await this.accountService.getAccount(id);
-        await this.accountService.update(account, accountData);
+    async deleteAccount(@Args('id') id: string) {
+        const action = await this.accountService.getById(id);
+        await this.accountService.delete(action);
 
-        if (roles.length) {
-            const assignIn = await this.rolesService.getMany(roles);
-            this.accountService.assign(account, assignIn);
-        }
+        return action;
+    }
 
-        return account;
+    @ResolveField()
+    async adresses(@Parent() account: Account) {
+        // return await this.adressesService.getByAccount(account.id);
     }
 }

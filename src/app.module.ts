@@ -1,23 +1,22 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AccountModule } from './modules/account/account.module';
-import { AuthModule } from './modules/auth/auth.module';
-import { RolesModule } from './modules/roles/roles.module';
-import { ActionsModule } from './modules/actions/actions.module';
+import * as ormconfig from './ormconfig';
 
 @Module({
     imports: [
-        TypeOrmModule.forRoot(),
+        ConfigModule.forRoot(),
+        TypeOrmModule.forRootAsync({
+            useFactory: async () => ormconfig,
+        }),
         GraphQLModule.forRoot({
             autoSchemaFile: true,
             context: ({ req }) => ({ req }),
         }),
         AccountModule,
-        AuthModule,
-        RolesModule,
-        ActionsModule,
     ],
     providers: [],
 })

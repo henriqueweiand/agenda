@@ -1,38 +1,62 @@
-import {
-    Entity,
-    Column,
-    PrimaryGeneratedColumn,
-    BeforeInsert,
-    Unique,
-    BaseEntity,
-    ManyToMany,
-    JoinTable,
-    BeforeUpdate,
-} from 'typeorm';
+import { Field, ObjectType, InputType } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
-import { Roles } from '../roles/roles.entity';
+import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
+import { BaseCollection } from '../common/entities/base.entity';
+import { Adresses } from '../adresses/adresses.entity';
+import { CreateAdressesInput } from '../adresses/inputs/createAdresses.input';
+
+export enum GenreOptions {
+    MASCULINO = 'masc',
+    FEMININO = 'fem',
+    OUTROS = 'others',
+}
 
 @Entity()
-@Unique(['email'])
-export class Account extends BaseEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
-
-    @Column()
+@InputType()
+export class Account extends BaseCollection {
+    @MinLength(3)
+    @Field()
+    @Column({
+        nullable: false,
+    })
     firstName: string;
 
-    @Column()
+    @IsNotEmpty()
+    @Field()
+    @Column({
+        nullable: false,
+    })
     lastName: string;
 
-    @Column()
+    @IsNotEmpty()
+    @IsEmail()
+    @Field()
+    @Column({
+        nullable: true,
+    })
     email: string;
 
-    @Column()
-    password: string;
+    @IsNotEmpty()
+    @Field()
+    @Column({
+        nullable: false,
+    })
+    genre: GenreOptions;
 
-    @ManyToMany(type => Roles, { cascade: true, nullable: true })
-    @JoinTable({ name: 'account_roles ' })
-    roles: Promise<Roles[]>;
+    @IsNotEmpty()
+    @Field()
+    @Column({
+        nullable: true,
+    })
+    dateOfBirth: string;
+
+    @MinLength(6)
+    @Field()
+    @Column({
+        nullable: false,
+    })
+    password: string;
 
     @BeforeInsert()
     @BeforeUpdate()
@@ -45,4 +69,17 @@ export class Account extends BaseEntity {
     async comparePassword(attempt: string): Promise<boolean> {
         return await bcrypt.compare(attempt, this.password);
     }
+
+    // @Field()
+    @Field(() => [CreateAdressesInput], { defaultValue: [] })
+    @OneToMany(
+        () => Adresses,
+        adresses => adresses.account,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    adresses: Adresses[];
 }

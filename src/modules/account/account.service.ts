@@ -1,46 +1,71 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-
+import { format } from 'date-fns';
+import { MappedException } from 'nestjs-mapped-exception';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Account } from './account.entity';
-import { Roles } from '../roles/roles.entity';
-
-import { CreateAccountInput } from './inputs/create-account.input';
-import { UpdateAccountInput } from './inputs/update-account.input';
+import { AccountException } from './account.exception';
+import { GetAllProductDto } from './dto/getAllAccountDto';
+// import { CreateAccountInput } from './inputs/createAccount.input';
+import { UpdateAccountInput } from './inputs/updateAccount.input';
 
 @Injectable()
 export class AccountService {
     constructor(
         @InjectRepository(Account)
         private accountRepository: Repository<Account>,
+        private readonly exception: MappedException<AccountException>,
     ) {}
 
-    async getAccounts(): Promise<Account[]> {
-        return this.accountRepository.find({ relations: ['roles'] });
-    }
+    async getAccounts(filters: GetAllProductDto): Promise<Account[]> {
+        const conditions: FindManyOptions<Account> = {
+            take: filters.take,
+            skip: filters.skip,
+        };
 
-    async getAccount(id: string): Promise<Account> {
-        return this.accountRepository.findOne({ id });
-    }
+        if (filters.search) {
+            conditions.where = { firstName: Like('%' + filters.search + '%') };
+        }
 
-    public async getByEmail(email: string): Promise<Account> {
-        return await this.accountRepository.findOne({ email });
+        return await this.accountRepository.find({
+            ...conditions,
+            withDeleted: false,
+        });
     }
 
     public async getById(id: string): Promise<Account> {
-        return await this.accountRepository.findOne({ id });
+        const account = await this.accountRepository.findOne({
+            where: { id },
+            withDeleted: false,
+        });
+        if (!account) {
+            this.exception.ERRORS.NOT_FOUND.throw();
+        }
+
+        return account;
     }
 
-    async create(
-        createAccountInput: Omit<CreateAccountInput, 'roles'>,
-    ): Promise<Account> {
-        const { firstName, lastName, email, password } = createAccountInput;
-        const account = this.accountRepository.create({
-            firstName,
-            lastName,
-            email,
-            password,
+    async exists(email: string): Promise<boolean> {
+        const account = await this.accountRepository.findOne({
+            where: { email },
+            withDeleted: false,
         });
+
+        return !!account;
+    }
+
+    async createAndSave(createAccountInput: Account): Promise<Account> {
+        if (await this.exists(createAccountInput.email)) {
+            this.exception.ERRORS.ALREADY_EXISTS.throw();
+        }
+
+        const account = this.accountRepository.create(createAccountInput);
+
+        // if (createAccountInput.adresses.length) {
+        //     createAccountInput.adresses.forEach((address: Adresses) => {
+        //         account.adresses.push(this.adressesService.create(address));
+        //     });
+        // }
 
         return await this.accountRepository.save(account);
     }
@@ -58,19 +83,9 @@ export class AccountService {
     }
 
     async delete(account: Account): Promise<boolean> {
-        await this.accountRepository.delete(account);
+        account.deletedAt = format(new Date(), 'yyyy-MM-dd');
+        await this.accountRepository.save(account);
 
         return true;
-    }
-
-    async assign(account: Account, roles: Roles[]): Promise<boolean> {
-        try {
-            account.roles = Promise.resolve(roles);
-            await this.accountRepository.save(account);
-
-            return true;
-        } catch (e) {
-            return false;
-        }
     }
 }
