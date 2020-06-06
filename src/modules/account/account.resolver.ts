@@ -12,6 +12,7 @@ import { AccountService } from './account.service';
 import { GetAllProductDto } from './dto/getAllAccountDto';
 import { CreateAccountInput } from './inputs/createAccount.input';
 import { AdressesService } from '../adresses/adresses.service';
+import { UpdateAccountInput } from './inputs/updateAccount.input';
 
 @Resolver(() => Account)
 export class AccountResolver extends BaseResolver {
@@ -43,22 +44,18 @@ export class AccountResolver extends BaseResolver {
         return account;
     }
 
-    // @Mutation(() => Account)
-    // async updateAccount(
-    //     @Args('id') id: string,
-    //     @Args('updateAccountInput') updateAccountInput: UpdateAccountInput,
-    // ) {
-    //     const { roles, ...accountData } = updateAccountInput;
-    //     const account = await this.accountService.getAccount(id);
-    //     await this.accountService.update(account, accountData);
+    @Mutation(() => Account)
+    async updateAccount(
+        @Args('id') id: string,
+        @Args('updateAccountInput') updateAccountInput: UpdateAccountInput,
+    ) {
+        const account = await this.accountService.getById(id);
 
-    //     if (roles.length) {
-    //         const assignIn = await this.rolesService.getMany(roles);
-    //         this.accountService.assign(account, assignIn);
-    //     }
-
-    //     return account;
-    // }
+        return await this.accountService.update(
+            account,
+            updateAccountInput as Account,
+        );
+    }
 
     @Mutation(() => Account)
     async deleteAccount(@Args('id') id: string) {

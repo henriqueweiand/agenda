@@ -1,8 +1,12 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsNotEmpty, IsUUID, IsOptional } from 'class-validator';
 
 @InputType()
 export class AdressesInput {
+    @IsOptional()
+    @Field({ nullable: true })
+    id?: string;
+
     @IsNotEmpty()
     @Field({ nullable: false })
     zip: string;

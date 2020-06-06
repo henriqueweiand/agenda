@@ -68,11 +68,11 @@ export class AccountService {
 
     async update(
         account: Account,
-        updateAccountInput: Omit<UpdateAccountInput, 'roles'>,
+        accountUpdateData: Omit<Account, 'address'>,
     ): Promise<Account> {
         const accountUpdate = this.accountRepository.merge(
             account,
-            updateAccountInput,
+            accountUpdateData,
         );
 
         return await this.accountRepository.save(accountUpdate);
