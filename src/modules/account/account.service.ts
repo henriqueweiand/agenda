@@ -6,9 +6,6 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Account } from './account.entity';
 import { AccountException } from './account.exception';
 import { GetAllProductDto } from './dto/getAllAccountDto';
-import { UpdateAccountInput } from './inputs/updateAccount.input';
-import { Adresses } from '../adresses/adresses.entity';
-import { AdressesService } from '../adresses/adresses.service';
 
 @Injectable()
 export class AccountService {
@@ -16,7 +13,6 @@ export class AccountService {
         @InjectRepository(Account)
         private accountRepository: Repository<Account>,
         private readonly exception: MappedException<AccountException>,
-        private adressesService: AdressesService,
     ) {}
 
     async getAccounts(filters: GetAllProductDto): Promise<Account[]> {

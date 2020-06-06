@@ -40,5 +40,5 @@ export class AccountInput {
     password: string;
 
     @Field(() => [AccountAdressesInput], { defaultValue: [], nullable: true })
-    adresses: AccountAdressesInput[];
+    adresses?: AccountAdressesInput[];
 }

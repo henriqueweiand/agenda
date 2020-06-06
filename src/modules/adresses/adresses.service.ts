@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Adresses } from './adresses.entity';
-// import { CreateAdressesInput } from './inputs/createAdresses.input';
+import { GetAllAdressesType } from './types/GetAllAdressesDto';
+import { format } from 'date-fns';
 
 @Injectable()
 export class AdressesService {
@@ -11,8 +12,20 @@ export class AdressesService {
         private adressesRepository: Repository<Adresses>,
     ) {}
 
-    async getAdresses(): Promise<Adresses[]> {
-        return this.adressesRepository.find();
+    async getAdresses(filters: GetAllAdressesType): Promise<Adresses[]> {
+        const conditions: FindManyOptions<Adresses> = {
+            take: filters.take,
+            skip: filters.skip,
+        };
+
+        if (filters.search) {
+            conditions.where = { address: Like('%' + filters.search + '%') };
+        }
+
+        return await this.adressesRepository.find({
+            ...conditions,
+            withDeleted: false,
+        });
     }
 
     public async getById(id: string): Promise<Adresses> {
@@ -23,24 +36,27 @@ export class AdressesService {
         return await this.adressesRepository.find({ where: { account: id } });
     }
 
-    create(adresses: Adresses): Adresses {
-        return this.adressesRepository.create(adresses);
+    async createAndSave(createAdresseInput: Adresses) {
+        const account = this.adressesRepository.create(createAdresseInput);
+
+        return await this.adressesRepository.save(account);
     }
 
     async update(
-        role: Adresses,
-        createAdressesInput: Adresses,
+        adresses: Adresses,
+        adressesUpdateData: Omit<Adresses, 'account'>,
     ): Promise<Adresses> {
-        const roleUpdate = this.adressesRepository.merge(
-            role,
-            createAdressesInput,
+        const accountUpdate = this.adressesRepository.merge(
+            adresses,
+            adressesUpdateData,
         );
 
-        return await this.adressesRepository.save(roleUpdate);
+        return await this.adressesRepository.save(accountUpdate);
     }
 
-    async delete(role: Adresses): Promise<boolean> {
-        await this.adressesRepository.delete(role);
+    async delete(adresse: Adresses): Promise<boolean> {
+        adresse.deletedAt = format(new Date(), 'yyyy-MM-dd');
+        await this.adressesRepository.save(adresse);
 
         return true;
     }

@@ -1,5 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsUUID, IsOptional } from 'class-validator';
+import { Account } from 'src/modules/account/account.entity';
 
 @InputType()
 export class AdressesInput {
@@ -33,5 +34,5 @@ export class AdressesInput {
 
     @IsUUID('4')
     @Field(() => ID, { nullable: false })
-    account: string;
+    account: Account;
 }

@@ -48,8 +48,7 @@ export class Adresses {
     @Column({ nullable: false })
     state: string;
 
-    @IsUUID('4')
-    @Field(() => ID, { nullable: false })
+    @Field(() => Account, { nullable: false })
     @Column({ name: 'accountId', type: 'uuid' })
     @ManyToOne(
         () => Account,
@@ -59,7 +58,7 @@ export class Adresses {
             nullable: false,
         },
     )
-    account: string;
+    account: Account;
 
     @CreateDateColumn({
         type: 'timestamp',
