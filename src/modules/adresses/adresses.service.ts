@@ -23,8 +23,8 @@ export class AdressesService {
         return await this.adressesRepository.find({ where: { account: id } });
     }
 
-    create(createAdressesInput: Adresses): Adresses {
-        return this.adressesRepository.create(createAdressesInput);
+    create(adresses: Adresses): Adresses {
+        return this.adressesRepository.create(adresses);
     }
 
     async update(

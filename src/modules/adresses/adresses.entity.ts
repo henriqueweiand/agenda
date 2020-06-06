@@ -1,12 +1,23 @@
-import { Field, ID, ObjectType, InputType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { IsNotEmpty, IsUUID } from 'class-validator';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { Account } from '../account/account.entity';
-import { BaseCollection } from '../common/entities/base.entity';
 
 @Entity()
-@InputType()
-export class Adresses extends BaseCollection {
+@ObjectType()
+export class Adresses {
+    @PrimaryGeneratedColumn('uuid', { name: 'id' })
+    @Field({ name: 'id', nullable: false })
+    id: string;
+
     @IsNotEmpty()
     @Column({ nullable: false })
     @Field()
@@ -49,4 +60,26 @@ export class Adresses extends BaseCollection {
         },
     )
     account: string;
+
+    @CreateDateColumn({
+        type: 'timestamp',
+        default: () => 'LOCALTIMESTAMP',
+    })
+    @Field()
+    createdAt: string;
+
+    @UpdateDateColumn({
+        type: 'timestamp',
+        default: () => 'LOCALTIMESTAMP',
+    })
+    @Field()
+    updatedAt: string;
+
+    @DeleteDateColumn({
+        type: 'timestamp',
+        default: null,
+        nullable: true,
+    })
+    @Field()
+    deletedAt: string;
 }

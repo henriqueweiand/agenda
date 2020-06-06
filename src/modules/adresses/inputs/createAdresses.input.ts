@@ -1,5 +1,5 @@
-import { InputType, ObjectType } from '@nestjs/graphql';
-import { Adresses } from '../adresses.entity';
+import { InputType } from '@nestjs/graphql';
+import { AdressesInput } from './adresses.input';
 
 @InputType()
-export class CreateAdressesInput extends Adresses {}
+export class CreateAdressesInput extends AdressesInput {}

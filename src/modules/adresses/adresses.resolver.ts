@@ -1,35 +1,34 @@
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { AdressesService } from './adresses.service';
-import { CreateAdressesInput } from './inputs/createAdresses.input';
-import { AdressesType } from './types/adresses.type';
+import { Adresses } from './adresses.entity';
 
-@Resolver(() => AdressesType)
+@Resolver(() => Adresses)
 export class AdressesResolver {
     constructor(private adressesService: AdressesService) {}
 
     // @UseGuards(GraphQLAuthGuard)
-    @Query(() => AdressesType)
+    @Query(() => Adresses)
     adresse(@Args('id') id: string) {
         return this.adressesService.getById(id);
     }
 
     // @UseGuards(GraphQLAuthGuard)
-    @Query(() => [AdressesType])
+    @Query(() => [Adresses])
     adresses() {
         return this.adressesService.getAdresses();
     }
 
     // @UseGuards(GraphQLAuthGuard)
-    @Mutation(() => AdressesType)
-    async createRole(
-        @Args('createAdressesInput')
-        createAdressesInput: CreateAdressesInput,
-    ) {
-        // return await this.adressesService.create(createAdressesInput);
-    }
+    // @Mutation(() => Adresses)
+    // async createRole(
+    //     @Args('createAdressesInput')
+    //     createAdressesInput: CreateAdressesInput,
+    // ) {
+    //     // return await this.adressesService.create(createAdressesInput);
+    // }
 
     // @UseGuards(GraphQLAuthGuard)
-    // @Mutation(() => AdressesType)
+    // @Mutation(() => Adresses)
     // async updateRole(
     //     @Args('id') id: string,
     //     @Args('createAdressesInput')
@@ -40,11 +39,11 @@ export class AdressesResolver {
     // }
 
     // @UseGuards(GraphQLAuthGuard)
-    @Mutation(() => AdressesType)
-    async deleteRole(@Args('id') id: string) {
-        const role = await this.adressesService.getById(id);
-        await this.adressesService.delete(role);
+    // @Mutation(() => Adresses)
+    // async deleteRole(@Args('id') id: string) {
+    //     const role = await this.adressesService.getById(id);
+    //     await this.adressesService.delete(role);
 
-        return role;
-    }
+    //     return role;
+    // }
 }

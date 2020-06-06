@@ -1,10 +1,17 @@
-import { Field, ObjectType, InputType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import * as bcrypt from 'bcrypt';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToMany } from 'typeorm';
-import { BaseCollection } from '../common/entities/base.entity';
+import {
+    BeforeInsert,
+    BeforeUpdate,
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 import { Adresses } from '../adresses/adresses.entity';
-import { CreateAdressesInput } from '../adresses/inputs/createAdresses.input';
 
 export enum GenreOptions {
     MASCULINO = 'masc',
@@ -13,45 +20,42 @@ export enum GenreOptions {
 }
 
 @Entity()
-@InputType()
-export class Account extends BaseCollection {
-    @MinLength(3)
+@ObjectType()
+export class Account {
+    @PrimaryGeneratedColumn('uuid', { name: 'id' })
+    @Field({ name: 'id', nullable: false })
+    id: string;
+
     @Field()
     @Column({
         nullable: false,
     })
     firstName: string;
 
-    @IsNotEmpty()
     @Field()
     @Column({
         nullable: false,
     })
     lastName: string;
 
-    @IsNotEmpty()
-    @IsEmail()
     @Field()
     @Column({
         nullable: true,
     })
     email: string;
 
-    @IsNotEmpty()
     @Field()
     @Column({
         nullable: false,
     })
     genre: GenreOptions;
 
-    @IsNotEmpty()
     @Field()
     @Column({
         nullable: true,
     })
     dateOfBirth: string;
 
-    @MinLength(6)
     @Field()
     @Column({
         nullable: false,
@@ -70,8 +74,7 @@ export class Account extends BaseCollection {
         return await bcrypt.compare(attempt, this.password);
     }
 
-    // @Field()
-    @Field(() => [CreateAdressesInput], { defaultValue: [] })
+    @Field(() => [Adresses], { defaultValue: [] })
     @OneToMany(
         () => Adresses,
         adresses => adresses.account,
@@ -82,4 +85,26 @@ export class Account extends BaseCollection {
         },
     )
     adresses: Adresses[];
+
+    @CreateDateColumn({
+        type: 'timestamp',
+        default: () => 'LOCALTIMESTAMP',
+    })
+    @Field()
+    createdAt: string;
+
+    @UpdateDateColumn({
+        type: 'timestamp',
+        default: () => 'LOCALTIMESTAMP',
+    })
+    @Field()
+    updatedAt: string;
+
+    @DeleteDateColumn({
+        type: 'timestamp',
+        default: null,
+        nullable: true,
+    })
+    @Field()
+    deletedAt: string;
 }

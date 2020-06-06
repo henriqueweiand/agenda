@@ -1,46 +1,49 @@
 import {
     Args,
     Mutation,
-    Parent,
     Query,
-    ResolveField,
     Resolver,
+    ResolveField,
+    Parent,
 } from '@nestjs/graphql';
 import { BaseResolver } from '../common/resolver/base.resolver';
 import { Account } from './account.entity';
 import { AccountService } from './account.service';
 import { GetAllProductDto } from './dto/getAllAccountDto';
 import { CreateAccountInput } from './inputs/createAccount.input';
-import { AccountType } from './types/account.type';
+import { AdressesService } from '../adresses/adresses.service';
 
-@Resolver(() => AccountType)
+@Resolver(() => Account)
 export class AccountResolver extends BaseResolver {
-    constructor(private accountService: AccountService) {
+    constructor(
+        private accountService: AccountService,
+        private adressesService: AdressesService,
+    ) {
         super();
     }
 
-    @Query(() => [AccountType])
+    @Query(() => [Account])
     accounts(@Args() filters: GetAllProductDto) {
         return this.accountService.getAccounts(filters);
     }
 
-    @Query(() => AccountType)
+    @Query(() => Account)
     account(@Args('id') id: string) {
         return this.accountService.getById(id);
     }
 
-    @Mutation(() => AccountType)
+    @Mutation(() => Account)
     async createAccount(
         @Args('createAccountInput') createAccountInput: CreateAccountInput,
     ) {
         const account = await this.accountService.createAndSave(
-            createAccountInput,
+            createAccountInput as Account,
         );
 
         return account;
     }
 
-    // @Mutation(() => AccountType)
+    // @Mutation(() => Account)
     // async updateAccount(
     //     @Args('id') id: string,
     //     @Args('updateAccountInput') updateAccountInput: UpdateAccountInput,
@@ -57,7 +60,7 @@ export class AccountResolver extends BaseResolver {
     //     return account;
     // }
 
-    @Mutation(() => AccountType)
+    @Mutation(() => Account)
     async deleteAccount(@Args('id') id: string) {
         const action = await this.accountService.getById(id);
         await this.accountService.delete(action);
@@ -67,6 +70,6 @@ export class AccountResolver extends BaseResolver {
 
     @ResolveField()
     async adresses(@Parent() account: Account) {
-        // return await this.adressesService.getByAccount(account.id);
+        return await this.adressesService.getByAccount(account.id);
     }
 }

@@ -6,8 +6,9 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Account } from './account.entity';
 import { AccountException } from './account.exception';
 import { GetAllProductDto } from './dto/getAllAccountDto';
-// import { CreateAccountInput } from './inputs/createAccount.input';
 import { UpdateAccountInput } from './inputs/updateAccount.input';
+import { Adresses } from '../adresses/adresses.entity';
+import { AdressesService } from '../adresses/adresses.service';
 
 @Injectable()
 export class AccountService {
@@ -15,6 +16,7 @@ export class AccountService {
         @InjectRepository(Account)
         private accountRepository: Repository<Account>,
         private readonly exception: MappedException<AccountException>,
+        private adressesService: AdressesService,
     ) {}
 
     async getAccounts(filters: GetAllProductDto): Promise<Account[]> {
@@ -54,18 +56,12 @@ export class AccountService {
         return !!account;
     }
 
-    async createAndSave(createAccountInput: Account): Promise<Account> {
+    async createAndSave(createAccountInput: Account) {
         if (await this.exists(createAccountInput.email)) {
             this.exception.ERRORS.ALREADY_EXISTS.throw();
         }
 
         const account = this.accountRepository.create(createAccountInput);
-
-        // if (createAccountInput.adresses.length) {
-        //     createAccountInput.adresses.forEach((address: Adresses) => {
-        //         account.adresses.push(this.adressesService.create(address));
-        //     });
-        // }
 
         return await this.accountRepository.save(account);
     }
