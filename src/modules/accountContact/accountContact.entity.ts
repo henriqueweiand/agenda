@@ -10,36 +10,28 @@ import {
 } from 'typeorm';
 import { Account } from '../account/account.entity';
 
+export enum AccountContactTypeOptions {
+    RG = 'RG',
+    CPF = 'CPF',
+    CNPJ = 'CNPJ',
+    TELEFONE = 'Telefone',
+    CELULAR = 'Celular',
+}
+
 @Entity()
 @ObjectType()
-export class Adresses {
+export class AccountContact {
     @PrimaryGeneratedColumn('uuid', { name: 'id' })
     @Field({ name: 'id', nullable: false })
     id: string;
 
     @Column({ nullable: false })
     @Field()
-    zip: string;
+    type: AccountContactTypeOptions;
 
     @Field()
     @Column({ nullable: false })
-    address: string;
-
-    @Field()
-    @Column({ nullable: false })
-    number: string;
-
-    @Field()
-    @Column({ nullable: false })
-    district: string;
-
-    @Field()
-    @Column({ nullable: false })
-    city: string;
-
-    @Field()
-    @Column({ nullable: false })
-    state: string;
+    value: string;
 
     @Field(() => Account, { nullable: false })
     @Column({ name: 'accountId', type: 'uuid' })

@@ -12,6 +12,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Adresses } from '../adresses/adresses.entity';
+import { AccountContact } from '../accountContact/accountContact.entity';
 
 export enum GenreOptions {
     MASCULINO = 'masc',
@@ -85,6 +86,18 @@ export class Account {
         },
     )
     adresses: Adresses[];
+
+    @Field(() => [AccountContact], { defaultValue: [] })
+    @OneToMany(
+        () => AccountContact,
+        accountContact => accountContact.account,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    accountContact: AccountContact[];
 
     @CreateDateColumn({
         type: 'timestamp',

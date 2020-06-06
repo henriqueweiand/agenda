@@ -13,12 +13,14 @@ import { GetAllAccountType } from './types/GetAllAccount.type';
 import { CreateAccountInput } from './inputs/createAccount.input';
 import { AdressesService } from '../adresses/adresses.service';
 import { UpdateAccountInput } from './inputs/updateAccount.input';
+import { AccountContactService } from '../accountContact/accountContact.service';
 
 @Resolver(() => Account)
 export class AccountResolver extends BaseResolver {
     constructor(
         private accountService: AccountService,
         private adressesService: AdressesService,
+        private accountContactService: AccountContactService,
     ) {
         super();
     }
@@ -68,5 +70,10 @@ export class AccountResolver extends BaseResolver {
     @ResolveField()
     async adresses(@Parent() account: Account) {
         return await this.adressesService.getByAccount(account.id);
+    }
+
+    @ResolveField()
+    async accountContact(@Parent() account: Account) {
+        return await this.accountContactService.getByAccount(account.id);
     }
 }

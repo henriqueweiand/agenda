@@ -7,6 +7,7 @@ import { Account } from './account.entity';
 import { AccountException } from './account.exception';
 import { AccountResolver } from './account.resolver';
 import { AccountService } from './account.service';
+import { AccountContactModule } from '../accountContact/accountContact.module';
 
 @Module({
     imports: [
@@ -14,6 +15,7 @@ import { AccountService } from './account.service';
         MappedExceptionModule.forFeature(AccountException, {
             prefix: 'ACC_ERROR_',
         }),
+        AccountContactModule,
     ],
     providers: [
         AccountException,
