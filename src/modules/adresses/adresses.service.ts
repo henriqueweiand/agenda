@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Adresses } from './adresses.entity';
-import { GetAllAdressesType } from './types/GetAllAdressesDto';
+import { GetAllAdressesType } from './types/GetAllAdresses.type';
 import { format } from 'date-fns';
 
 @Injectable()

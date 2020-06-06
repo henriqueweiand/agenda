@@ -8,7 +8,7 @@ import {
 } from '@nestjs/graphql';
 import { AdressesService } from './adresses.service';
 import { Adresses } from './adresses.entity';
-import { GetAllAdressesType } from './types/GetAllAdressesDto';
+import { GetAllAdressesType } from './types/GetAllAdresses.type';
 import { CreateAdressesInput } from './inputs/createAdresses.input';
 import { UpdateAdressesInput } from './inputs/updateAdresses.input';
 import { AccountService } from '../account/account.service';

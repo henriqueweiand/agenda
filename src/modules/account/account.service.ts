@@ -5,7 +5,7 @@ import { MappedException } from 'nestjs-mapped-exception';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Account } from './account.entity';
 import { AccountException } from './account.exception';
-import { GetAllProductDto } from './dto/getAllAccountDto';
+import { GetAllAccountType } from './types/GetAllAccount.type';
 
 @Injectable()
 export class AccountService {
@@ -15,7 +15,7 @@ export class AccountService {
         private readonly exception: MappedException<AccountException>,
     ) {}
 
-    async getAccounts(filters: GetAllProductDto): Promise<Account[]> {
+    async getAccounts(filters: GetAllAccountType): Promise<Account[]> {
         const conditions: FindManyOptions<Account> = {
             take: filters.take,
             skip: filters.skip,

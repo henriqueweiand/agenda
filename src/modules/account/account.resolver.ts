@@ -9,7 +9,7 @@ import {
 import { BaseResolver } from '../common/resolver/base.resolver';
 import { Account } from './account.entity';
 import { AccountService } from './account.service';
-import { GetAllProductDto } from './dto/getAllAccountDto';
+import { GetAllAccountType } from './types/GetAllAccount.type';
 import { CreateAccountInput } from './inputs/createAccount.input';
 import { AdressesService } from '../adresses/adresses.service';
 import { UpdateAccountInput } from './inputs/updateAccount.input';
@@ -24,7 +24,7 @@ export class AccountResolver extends BaseResolver {
     }
 
     @Query(() => [Account])
-    accounts(@Args() filters: GetAllProductDto) {
+    accounts(@Args() filters: GetAllAccountType) {
         return this.accountService.getAccounts(filters);
     }
 
