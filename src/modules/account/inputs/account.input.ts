@@ -1,12 +1,26 @@
-import { Field, InputType, OmitType } from '@nestjs/graphql';
-import { IsEmail, IsNotEmpty, MinLength, IsOptional } from 'class-validator';
-import { AdressesInput } from 'src/modules/adresses/inputs/adresses.input';
+import { Field, InputType, OmitType, ID } from '@nestjs/graphql';
+import {
+    IsEmail,
+    IsNotEmpty,
+    MinLength,
+    IsOptional,
+    IsUUID,
+} from 'class-validator';
+import { AdressesInput } from '../../../modules/adresses/inputs/adresses.input';
 import { GenreOptions } from '../account.entity';
-import { AccountContactInput } from 'src/modules/accountContact/inputs/accountContact.input';
+import { AccountContactInput } from '../../../modules/accountContact/inputs/accountContact.input';
+import { NetworkInput } from '../../../modules/network/inputs/network.input';
+import { Network } from 'src/modules/network/network.entity';
 
 @InputType()
 export class AccountAdressesInput extends OmitType(AdressesInput, [
     'account',
+]) {}
+
+@InputType()
+export class AccountNetworkInput extends OmitType(NetworkInput, [
+    'account',
+    'establishment',
 ]) {}
 
 @InputType()
@@ -53,4 +67,9 @@ export class AccountInput {
         nullable: true,
     })
     accountContact?: AccountAccountContactInput[];
+
+    @IsNotEmpty()
+    @IsUUID('4')
+    @Field(() => ID, { nullable: false })
+    network: Network;
 }

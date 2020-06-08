@@ -64,7 +64,7 @@ export class AccountService {
 
     async update(
         account: Account,
-        accountUpdateData: Omit<Account, 'address'>,
+        accountUpdateData: Omit<Account, 'address' | 'network'>,
     ): Promise<Account> {
         const accountUpdate = this.accountRepository.merge(
             account,

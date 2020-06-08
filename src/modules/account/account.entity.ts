@@ -7,12 +7,14 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
-import { Adresses } from '../adresses/adresses.entity';
 import { AccountContact } from '../accountContact/accountContact.entity';
+import { Adresses } from '../adresses/adresses.entity';
+import { Network } from '../network/network.entity';
 
 export enum GenreOptions {
     MASCULINO = 'masc',
@@ -98,6 +100,18 @@ export class Account {
         },
     )
     accountContact: AccountContact[];
+
+    @Field(() => Network, { nullable: false })
+    @Column({ name: 'networkId', type: 'uuid' })
+    @ManyToOne(
+        () => Network,
+        network => network.id,
+        {
+            onDelete: 'CASCADE',
+            nullable: false,
+        },
+    )
+    network: Network;
 
     @CreateDateColumn({
         type: 'timestamp',

@@ -14,6 +14,7 @@ import { CreateAccountInput } from './inputs/createAccount.input';
 import { AdressesService } from '../adresses/adresses.service';
 import { UpdateAccountInput } from './inputs/updateAccount.input';
 import { AccountContactService } from '../accountContact/accountContact.service';
+import { NetworkService } from '../network/network.service';
 
 @Resolver(() => Account)
 export class AccountResolver extends BaseResolver {
@@ -21,6 +22,7 @@ export class AccountResolver extends BaseResolver {
         private accountService: AccountService,
         private adressesService: AdressesService,
         private accountContactService: AccountContactService,
+        private networkService: NetworkService,
     ) {
         super();
     }
@@ -75,5 +77,10 @@ export class AccountResolver extends BaseResolver {
     @ResolveField()
     async accountContact(@Parent() account: Account) {
         return await this.accountContactService.getByAccount(account.id);
+    }
+
+    @ResolveField()
+    async network(@Parent() account: Account) {
+        return await this.networkService.getById(String(account.network));
     }
 }

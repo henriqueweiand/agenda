@@ -8,6 +8,7 @@ import { AccountException } from './account.exception';
 import { AccountResolver } from './account.resolver';
 import { AccountService } from './account.service';
 import { AccountContactModule } from '../accountContact/accountContact.module';
+import { NetworkModule } from '../network/network.module';
 
 @Module({
     imports: [
@@ -16,6 +17,7 @@ import { AccountContactModule } from '../accountContact/accountContact.module';
             prefix: 'ACC_ERROR_',
         }),
         AccountContactModule,
+        NetworkModule,
     ],
     providers: [
         AccountException,

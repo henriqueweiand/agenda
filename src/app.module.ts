@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AccountModule } from './modules/account/account.module';
 import * as ormconfig from './ormconfig';
 import { AdressesModule } from './modules/adresses/adresses.module';
+import { NetworkModule } from './modules/network/network.module';
+import { EstablishmentModule } from './modules/establishment/establishment.module';
 
 @Module({
     imports: [
@@ -19,6 +21,8 @@ import { AdressesModule } from './modules/adresses/adresses.module';
         }),
         AccountModule,
         AdressesModule,
+        NetworkModule,
+        EstablishmentModule,
     ],
     providers: [],
 })

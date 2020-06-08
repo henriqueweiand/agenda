@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsUUID, IsOptional } from 'class-validator';
-import { Account } from 'src/modules/account/account.entity';
+import { Account } from '../../../modules/account/account.entity';
 import { AccountContactTypeOptions } from '../accountContact.entity';
 
 @InputType()
