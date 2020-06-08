@@ -5,52 +5,54 @@ import {
     DeleteDateColumn,
     Entity,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
-    OneToMany,
 } from 'typeorm';
-import { Network } from '../network/network.entity';
+import { Account } from '../account/account.entity';
 import { Scheduling } from '../scheduling/scheduling.entity';
 
 @Entity()
 @ObjectType()
-export class Establishment {
+export class Handbook {
     @PrimaryGeneratedColumn('uuid', { name: 'id' })
     @Field({ name: 'id', nullable: false })
     id: string;
 
+    @Field({ nullable: true })
+    @Column({
+        nullable: false,
+        type: 'text',
+    })
+    description?: string;
+
     @Field({ nullable: false })
     @Column({
+        type: 'timestamp',
         nullable: false,
     })
-    name: string;
+    date: string;
 
-    @Field({ defaultValue: false, nullable: false })
-    @Column({
-        nullable: false,
-        default: false,
-        type: 'boolean',
-    })
-    main: boolean;
-
-    @Field(() => Network, { nullable: false })
-    @Column({ name: 'networkId', type: 'uuid' })
+    @Field(() => Account, { nullable: false })
+    @Column({ name: 'accountId', type: 'uuid' })
     @ManyToOne(
-        () => Network,
-        network => network.id,
+        () => Account,
+        account => account.id,
         {
             onDelete: 'CASCADE',
             nullable: false,
         },
     )
-    network: Network;
+    account: Account;
 
     @Field(() => [Scheduling], { defaultValue: [] })
     @OneToMany(
         () => Scheduling,
-        scheduling => scheduling.establishment,
+        scheduling => scheduling.handbook,
         {
             nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
         },
     )
     scheduling: Scheduling[];

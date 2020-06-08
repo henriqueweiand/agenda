@@ -7,10 +7,12 @@ import { EstablishmentException } from './establishment.exception';
 import { EstablishmentResolver } from './establishment.resolver';
 import { EstablishmentService } from './establishment.service';
 import { Network } from '../network/network.entity';
+import { Scheduling } from '../scheduling/scheduling.entity';
+import { SchedulingService } from '../scheduling/scheduling.service';
 
 @Module({
     imports: [
-        TypeOrmModule.forFeature([Establishment, Network]),
+        TypeOrmModule.forFeature([Establishment, Network, Scheduling]),
         MappedExceptionModule.forFeature(EstablishmentException, {
             prefix: 'EST_ERROR_',
         }),
@@ -20,6 +22,7 @@ import { Network } from '../network/network.entity';
         EstablishmentResolver,
         EstablishmentService,
         NetworkService,
+        SchedulingService,
     ],
     exports: [EstablishmentService],
 })

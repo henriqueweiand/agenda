@@ -1,24 +1,26 @@
 import {
     Args,
     Mutation,
-    Query,
-    Resolver,
-    ResolveField,
     Parent,
+    Query,
+    ResolveField,
+    Resolver,
 } from '@nestjs/graphql';
 import { BaseResolver } from '../common/resolver/base.resolver';
+import { NetworkService } from '../network/network.service';
+import { SchedulingService } from '../scheduling/scheduling.service';
 import { Establishment } from './establishment.entity';
 import { EstablishmentService } from './establishment.service';
 import { CreateEstablishmentInput } from './inputs/createEstablishment.input';
 import { UpdateEstablishmentInput } from './inputs/updateEstablishment.input';
 import { GetAllEstablishmentType } from './types/GetAllEstablishment.type';
-import { NetworkService } from '../network/network.service';
 
 @Resolver(() => Establishment)
 export class EstablishmentResolver extends BaseResolver {
     constructor(
         private establishmentService: EstablishmentService,
         private networkService: NetworkService,
+        private schedulingService: SchedulingService,
     ) {
         super();
     }
@@ -70,5 +72,12 @@ export class EstablishmentResolver extends BaseResolver {
     @ResolveField()
     async network(@Parent() establishment: Establishment) {
         return await this.networkService.getById(String(establishment.network));
+    }
+
+    @ResolveField()
+    async scheduling(@Parent() establishment: Establishment) {
+        return await this.schedulingService.getByHandEstablishment(
+            establishment.id,
+        );
     }
 }
