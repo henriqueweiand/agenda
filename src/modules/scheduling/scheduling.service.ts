@@ -61,6 +61,33 @@ export class SchedulingService {
         return scheduling;
     }
 
+    public async getByClerk(id: string): Promise<Scheduling[]> {
+        const scheduling = await this.schedulingRepository.find({
+            where: { clerk: id },
+            withDeleted: false,
+        });
+
+        return scheduling;
+    }
+
+    public async getByProfessional(id: string): Promise<Scheduling[]> {
+        const scheduling = await this.schedulingRepository.find({
+            where: { professional: id },
+            withDeleted: false,
+        });
+
+        return scheduling;
+    }
+
+    public async getByPatient(id: string): Promise<Scheduling[]> {
+        const scheduling = await this.schedulingRepository.find({
+            where: { patient: id },
+            withDeleted: false,
+        });
+
+        return scheduling;
+    }
+
     async createAndSave(createSchedulingInput: Scheduling) {
         const scheduling = this.schedulingRepository.create(
             createSchedulingInput,

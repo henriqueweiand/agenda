@@ -1,16 +1,16 @@
-import { Field, InputType, OmitType, ID } from '@nestjs/graphql';
+import { Field, ID, InputType, OmitType } from '@nestjs/graphql';
 import {
     IsEmail,
     IsNotEmpty,
-    MinLength,
     IsOptional,
     IsUUID,
+    MinLength,
 } from 'class-validator';
-import { AdressesInput } from '../../../modules/adresses/inputs/adresses.input';
-import { GenreOptions } from '../account.entity';
 import { AccountContactInput } from '../../../modules/accountContact/inputs/accountContact.input';
-import { NetworkInput } from '../../../modules/network/inputs/network.input';
-import { Network } from 'src/modules/network/network.entity';
+import { AdressesInput } from '../../../modules/adresses/inputs/adresses.input';
+import { AttachmentInput } from '../../../modules/attachment/inputs/attachment.input';
+import { Network } from '../../../modules/network/network.entity';
+import { GenreOptions } from '../account.entity';
 
 @InputType()
 export class AccountAdressesInput extends OmitType(AdressesInput, [
@@ -18,9 +18,8 @@ export class AccountAdressesInput extends OmitType(AdressesInput, [
 ]) {}
 
 @InputType()
-export class AccountNetworkInput extends OmitType(NetworkInput, [
+export class AccountAttachmentInput extends OmitType(AttachmentInput, [
     'account',
-    'establishment',
 ]) {}
 
 @InputType()
@@ -61,6 +60,9 @@ export class AccountInput {
 
     @Field(() => [AccountAdressesInput], { defaultValue: [], nullable: true })
     adresses?: AccountAdressesInput[];
+
+    @Field(() => [AccountAttachmentInput], { defaultValue: [], nullable: true })
+    attachment?: AccountAttachmentInput[];
 
     @Field(() => [AccountAccountContactInput], {
         defaultValue: [],

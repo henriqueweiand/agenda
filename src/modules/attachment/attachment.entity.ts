@@ -5,33 +5,29 @@ import {
     DeleteDateColumn,
     Entity,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from 'typeorm';
 import { Account } from '../account/account.entity';
-import { Scheduling } from '../scheduling/scheduling.entity';
 
 @Entity()
 @ObjectType()
-export class Handbook {
+export class Attachment {
     @PrimaryGeneratedColumn('uuid', { name: 'id' })
     @Field({ name: 'id', nullable: false })
     id: string;
 
-    @Field({ nullable: true })
+    @Field({ nullable: false })
     @Column({
-        nullable: true,
-        type: 'text',
+        nullable: false,
     })
-    description?: string;
+    file: string;
 
     @Field({ nullable: false })
     @Column({
-        type: 'timestamp',
         nullable: false,
     })
-    date: string;
+    provider: string;
 
     @Field(() => Account, { nullable: false })
     @Column({ name: 'accountId', type: 'uuid' })
@@ -44,18 +40,6 @@ export class Handbook {
         },
     )
     account: Account;
-
-    @Field(() => [Scheduling], { defaultValue: [] })
-    @OneToMany(
-        () => Scheduling,
-        scheduling => scheduling.handbook,
-        {
-            nullable: true,
-            cascade: ['insert', 'update', 'remove'],
-            eager: true,
-        },
-    )
-    scheduling: Scheduling[];
 
     @CreateDateColumn({
         type: 'timestamp',

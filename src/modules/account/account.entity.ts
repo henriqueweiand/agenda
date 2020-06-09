@@ -15,6 +15,8 @@ import {
 import { AccountContact } from '../accountContact/accountContact.entity';
 import { Adresses } from '../adresses/adresses.entity';
 import { Network } from '../network/network.entity';
+import { Attachment } from '../attachment/attachment.entity';
+import { Scheduling } from '../scheduling/scheduling.entity';
 
 export enum GenreOptions {
     MASCULINO = 'masc',
@@ -88,6 +90,54 @@ export class Account {
         },
     )
     adresses: Adresses[];
+
+    @Field(() => [Scheduling], { defaultValue: [] })
+    @OneToMany(
+        () => Scheduling,
+        scheduling => scheduling.patient,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    patient: Scheduling[];
+
+    @Field(() => [Scheduling], { defaultValue: [] })
+    @OneToMany(
+        () => Scheduling,
+        scheduling => scheduling.professional,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    professional: Scheduling[];
+
+    @Field(() => [Scheduling], { defaultValue: [] })
+    @OneToMany(
+        () => Scheduling,
+        scheduling => scheduling.clerk,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    clerk: Scheduling[];
+
+    @Field(() => [Attachment], { defaultValue: [] })
+    @OneToMany(
+        () => Attachment,
+        attachment => attachment.account,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    attachment: Attachment[];
 
     @Field(() => [AccountContact], { defaultValue: [] })
     @OneToMany(

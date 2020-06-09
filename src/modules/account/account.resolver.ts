@@ -15,6 +15,8 @@ import { AdressesService } from '../adresses/adresses.service';
 import { UpdateAccountInput } from './inputs/updateAccount.input';
 import { AccountContactService } from '../accountContact/accountContact.service';
 import { NetworkService } from '../network/network.service';
+import { AttachmentService } from '../attachment/attachment.service';
+import { SchedulingService } from '../scheduling/scheduling.service';
 
 @Resolver(() => Account)
 export class AccountResolver extends BaseResolver {
@@ -23,6 +25,8 @@ export class AccountResolver extends BaseResolver {
         private adressesService: AdressesService,
         private accountContactService: AccountContactService,
         private networkService: NetworkService,
+        private attachmentService: AttachmentService,
+        private schedulingService: SchedulingService,
     ) {
         super();
     }
@@ -82,5 +86,29 @@ export class AccountResolver extends BaseResolver {
     @ResolveField()
     async network(@Parent() account: Account) {
         return await this.networkService.getById(String(account.network));
+    }
+
+    @ResolveField()
+    async attachment(@Parent() account: Account) {
+        return await this.attachmentService.getByAccount(account.id);
+    }
+
+    @ResolveField()
+    async patient(@Parent() account: Account) {
+        return await this.schedulingService.getByPatient(
+            String(account.patient),
+        );
+    }
+
+    @ResolveField()
+    async professional(@Parent() account: Account) {
+        return await this.schedulingService.getByProfessional(
+            String(account.professional),
+        );
+    }
+
+    @ResolveField()
+    async clerk(@Parent() account: Account) {
+        return await this.schedulingService.getByClerk(String(account.clerk));
     }
 }
