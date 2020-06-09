@@ -17,6 +17,7 @@ import { Adresses } from '../adresses/adresses.entity';
 import { Network } from '../network/network.entity';
 import { Attachment } from '../attachment/attachment.entity';
 import { Scheduling } from '../scheduling/scheduling.entity';
+import { AccountNetwork } from '../accountNetwork/accountNetwork.entity';
 
 export enum GenreOptions {
     MASCULINO = 'masc',
@@ -51,7 +52,10 @@ export class Account {
 
     @Field()
     @Column({
+        type: 'enum',
+        enum: GenreOptions,
         nullable: false,
+        default: GenreOptions.OUTROS,
     })
     genre: GenreOptions;
 
@@ -78,6 +82,18 @@ export class Account {
     async comparePassword(attempt: string): Promise<boolean> {
         return await bcrypt.compare(attempt, this.password);
     }
+
+    @Field(() => [AccountNetwork], { defaultValue: [] })
+    @OneToMany(
+        () => AccountNetwork,
+        accountNetwork => accountNetwork.account,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    accountNetwork: AccountNetwork[];
 
     @Field(() => [Adresses], { defaultValue: [] })
     @OneToMany(

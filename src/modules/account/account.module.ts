@@ -10,6 +10,7 @@ import { AccountException } from './account.exception';
 import { AccountResolver } from './account.resolver';
 import { AccountService } from './account.service';
 import { SchedulingModule } from '../scheduling/scheduling.module';
+import { AccountNetworkModule } from '../accountNetwork/accountNetwork.module';
 
 @Module({
     imports: [
@@ -22,6 +23,7 @@ import { SchedulingModule } from '../scheduling/scheduling.module';
         AttachmentModule,
         AdressesModule,
         SchedulingModule,
+        AccountNetworkModule,
     ],
     providers: [AccountException, AccountResolver, AccountService],
     exports: [AccountService],

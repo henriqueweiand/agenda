@@ -11,6 +11,12 @@ import { AdressesInput } from '../../../modules/adresses/inputs/adresses.input';
 import { AttachmentInput } from '../../../modules/attachment/inputs/attachment.input';
 import { Network } from '../../../modules/network/network.entity';
 import { GenreOptions } from '../account.entity';
+import { AccountNetworkInput } from 'src/modules/accountNetwork/inputs/accountNetwork.input';
+
+@InputType()
+export class AccountAccountNetworkInput extends OmitType(AccountNetworkInput, [
+    'account',
+]) {}
 
 @InputType()
 export class AccountAdressesInput extends OmitType(AdressesInput, [
@@ -60,6 +66,12 @@ export class AccountInput {
 
     @Field(() => [AccountAdressesInput], { defaultValue: [], nullable: true })
     adresses?: AccountAdressesInput[];
+
+    @Field(() => [AccountAccountNetworkInput], {
+        defaultValue: [],
+        nullable: true,
+    })
+    accountNetwork?: AccountAccountNetworkInput[];
 
     @Field(() => [AccountAttachmentInput], { defaultValue: [], nullable: true })
     attachment?: AccountAttachmentInput[];

@@ -17,6 +17,7 @@ import { AccountContactService } from '../accountContact/accountContact.service'
 import { NetworkService } from '../network/network.service';
 import { AttachmentService } from '../attachment/attachment.service';
 import { SchedulingService } from '../scheduling/scheduling.service';
+import { AccountNetworkService } from '../accountNetwork/accountNetwork.service';
 
 @Resolver(() => Account)
 export class AccountResolver extends BaseResolver {
@@ -27,6 +28,7 @@ export class AccountResolver extends BaseResolver {
         private networkService: NetworkService,
         private attachmentService: AttachmentService,
         private schedulingService: SchedulingService,
+        private accountNetworkService: AccountNetworkService,
     ) {
         super();
     }
@@ -110,5 +112,10 @@ export class AccountResolver extends BaseResolver {
     @ResolveField()
     async clerk(@Parent() account: Account) {
         return await this.schedulingService.getByClerk(String(account.clerk));
+    }
+
+    @ResolveField()
+    async accountNetwork(@Parent() account: Account) {
+        return await this.accountNetworkService.getByAccount(account.id);
     }
 }
