@@ -31,6 +31,7 @@ export class AuthService {
         const payload: JwtPayload = {
             id: account.id,
             email,
+            network: String(account.network),
         };
 
         const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
