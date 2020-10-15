@@ -11,7 +11,7 @@
         }
     ],
     "routes": [
-        { "src": "/(.*)", "dest": "/dist/apps/api/main.js" },
+        { "src": "/(.*)", "dest": "/dist/main.js" },
         { "handle": "filesystem" }
     ]
 }
