@@ -7,10 +7,10 @@
     "license": "UNLICENSED",
     "scripts": {
         "deploy": "npm run migration:run && npm run build",
-        "prebuild": "rimraf dist",
+        "prebuild": "npm run migration:run && rimraf dist",
         "build": "nest build",
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-        "start": "npm run migration:run && nest start",
+        "start": "nest start",
         "start:dev": "nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
