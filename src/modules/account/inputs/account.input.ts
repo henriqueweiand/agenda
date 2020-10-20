@@ -60,9 +60,10 @@ export class AccountInput {
     @Field({ nullable: false })
     dateOfBirth: string;
 
+    @IsOptional()
     @MinLength(6)
-    @Field({ nullable: false })
-    password: string;
+    @Field({ nullable: true })
+    password?: string;
 
     @Field(() => [AccountAdressesInput], { defaultValue: [], nullable: true })
     adresses?: AccountAdressesInput[];
