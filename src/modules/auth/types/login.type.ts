@@ -1,4 +1,5 @@
 import { ObjectType, Field } from '@nestjs/graphql';
+import { Account } from '../../account/account.entity'
 
 @ObjectType('Login')
 export class LoginType {
@@ -7,4 +8,7 @@ export class LoginType {
 
     @Field()
     accessToken: string;
+
+    @Field()
+    account: Account;
 }

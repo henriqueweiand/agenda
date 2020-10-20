@@ -39,7 +39,9 @@ export class AuthService {
         });
 
         if (account && (await account.comparePassword(password))) {
-            return { expiresIn, accessToken };
+            delete account.password;
+
+            return { expiresIn, accessToken, account };
         }
     }
 }
