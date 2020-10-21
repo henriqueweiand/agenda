@@ -11,6 +11,7 @@ import {
 import { Account } from '../account/account.entity';
 import { Establishment } from '../establishment/establishment.entity';
 import { Handbook } from '../handbook/handbook.entity';
+import { ColumnTimestampToDateTimeTransformer } from '../common/transformers/columnTimestampToDateTimeTransformer';
 
 @Entity()
 @ObjectType()
@@ -36,6 +37,7 @@ export class Scheduling {
     @Column({
         type: 'timestamp',
         nullable: false,
+        transformer: new ColumnTimestampToDateTimeTransformer(),
     })
     start: string;
 
@@ -43,6 +45,7 @@ export class Scheduling {
     @Column({
         type: 'timestamp',
         nullable: false,
+        transformer: new ColumnTimestampToDateTimeTransformer(),
     })
     end: string;
 
