@@ -22,12 +22,12 @@ export class SchedulingInput {
     @IsNotEmpty()
     @Type(() => Date)
     @Field({ nullable: false })
-    start: string;
+    startDate: string;
 
     @IsNotEmpty()
     @Type(() => Date)
     @Field({ nullable: false })
-    end: string;
+    endDate: string;
 
     @IsNotEmpty()
     @IsUUID('4')
