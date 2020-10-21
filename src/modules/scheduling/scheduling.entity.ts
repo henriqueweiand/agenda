@@ -39,7 +39,7 @@ export class Scheduling {
         nullable: false,
         transformer: new ColumnTimestampToDateTimeTransformer(),
     })
-    start: string;
+    startDate: string;
 
     @Field({ nullable: false })
     @Column({
@@ -47,7 +47,7 @@ export class Scheduling {
         nullable: false,
         transformer: new ColumnTimestampToDateTimeTransformer(),
     })
-    end: string;
+    endDate: string;
 
     @Field(() => Establishment, { nullable: false })
     @Column({ name: 'establishmentId', type: 'uuid' })
