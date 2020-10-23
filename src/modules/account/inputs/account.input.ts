@@ -7,6 +7,7 @@ import {
     MinLength,
 } from 'class-validator';
 import { AccountContactInput } from '../../../modules/accountContact/inputs/accountContact.input';
+import { HandbookInput } from '../../../modules/handbook/inputs/handbook.input';
 import { AdressesInput } from '../../../modules/adresses/inputs/adresses.input';
 import { AttachmentInput } from '../../../modules/attachment/inputs/attachment.input';
 import { Network } from '../../../modules/network/network.entity';
@@ -20,6 +21,11 @@ export class AccountAccountNetworkInput extends OmitType(AccountNetworkInput, [
 
 @InputType()
 export class AccountAdressesInput extends OmitType(AdressesInput, [
+    'account',
+]) {}
+
+@InputType()
+export class AccountHandbookInput extends OmitType(HandbookInput, [
     'account',
 ]) {}
 
@@ -67,6 +73,9 @@ export class AccountInput {
 
     @Field(() => [AccountAdressesInput], { defaultValue: [], nullable: true })
     adresses?: AccountAdressesInput[];
+
+    @Field(() => [AccountHandbookInput], { defaultValue: [], nullable: true })
+    handbook?: AccountHandbookInput[];
 
     @Field(() => [AccountAccountNetworkInput], {
         defaultValue: [],

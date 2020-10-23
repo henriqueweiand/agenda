@@ -43,6 +43,10 @@ export class HandbookService {
         return handbook;
     }
 
+    public async getByAccount(id: string): Promise<Handbook[]> {
+        return await this.handbookRepository.find({ where: { account: id } });
+    }
+
     public async getByNetwork(id: string): Promise<Handbook[]> {
         const handbook = await this.handbookRepository.find({
             where: { network: id },

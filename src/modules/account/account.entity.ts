@@ -18,6 +18,7 @@ import { Network } from '../network/network.entity';
 import { Attachment } from '../attachment/attachment.entity';
 import { Scheduling } from '../scheduling/scheduling.entity';
 import { AccountNetwork } from '../accountNetwork/accountNetwork.entity';
+import { Handbook } from '../handbook/handbook.entity';
 
 export enum GenreOptions {
     MASCULINO = 'masc',
@@ -106,6 +107,18 @@ export class Account {
         },
     )
     adresses: Adresses[];
+
+    @Field(() => [Handbook], { defaultValue: [] })
+    @OneToMany(
+        () => Handbook,
+        handbook => handbook.account,
+        {
+            nullable: true,
+            cascade: ['insert', 'update', 'remove'],
+            eager: true,
+        },
+    )
+    handbook: Handbook[];
 
     @Field(() => [Scheduling], { defaultValue: [] })
     @OneToMany(

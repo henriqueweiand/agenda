@@ -11,6 +11,7 @@ import { AccountResolver } from './account.resolver';
 import { AccountService } from './account.service';
 import { SchedulingModule } from '../scheduling/scheduling.module';
 import { AccountNetworkModule } from '../accountNetwork/accountNetwork.module';
+import { HandbookModule } from '../handbook/handbook.module';
 
 @Module({
     imports: [
@@ -18,6 +19,7 @@ import { AccountNetworkModule } from '../accountNetwork/accountNetwork.module';
         MappedExceptionModule.forFeature(AccountException, {
             prefix: 'ACC_ERROR_',
         }),
+        HandbookModule,
         AccountContactModule,
         NetworkModule,
         AttachmentModule,
