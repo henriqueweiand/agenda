@@ -18,11 +18,13 @@ import { NetworkService } from '../network/network.service';
 import { AttachmentService } from '../attachment/attachment.service';
 import { SchedulingService } from '../scheduling/scheduling.service';
 import { AccountNetworkService } from '../accountNetwork/accountNetwork.service';
+import { HandbookService } from '../handbook/handbook.service';
 
 @Resolver(() => Account)
 export class AccountResolver extends BaseResolver {
     constructor(
         private accountService: AccountService,
+        private handbookService: HandbookService,
         private adressesService: AdressesService,
         private accountContactService: AccountContactService,
         private networkService: NetworkService,
@@ -73,6 +75,11 @@ export class AccountResolver extends BaseResolver {
         await this.accountService.delete(action);
 
         return action;
+    }
+
+    @ResolveField()
+    async handbook(@Parent() account: Account) {
+        return await this.handbookService.getByAccount(account.id);
     }
 
     @ResolveField()
