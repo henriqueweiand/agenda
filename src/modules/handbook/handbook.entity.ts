@@ -10,6 +10,7 @@ import {
     UpdateDateColumn,
 } from 'typeorm';
 import { Account } from '../account/account.entity';
+import { ColumnTimestampToDateTimeTransformer } from '../common/transformers/columnTimestampToDateTimeTransformer';
 import { Scheduling } from '../scheduling/scheduling.entity';
 
 @Entity()
@@ -30,6 +31,7 @@ export class Handbook {
     @Column({
         type: 'timestamp',
         nullable: false,
+        transformer: new ColumnTimestampToDateTimeTransformer(),
     })
     date: string;
 

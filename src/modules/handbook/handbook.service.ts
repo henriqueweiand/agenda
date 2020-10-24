@@ -22,7 +22,7 @@ export class HandbookService {
         };
 
         if (filters.search) {
-            conditions.where = { title: Like('%' + filters.search + '%') };
+            conditions.where = { account: filters.search };
         }
 
         return await this.handbookRepository.find({
